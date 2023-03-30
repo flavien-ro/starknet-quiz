@@ -13,7 +13,7 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import { getAddress, loginUser } from "@/requests/useMe";
 import { useRouter } from "next/router";
 
-export default function ConnectWallet() {
+export default function ConnectWallet({ mutateQuizz }) {
   const router = useRouter();
 
   const { address } = useAccount();
@@ -29,6 +29,7 @@ export default function ConnectWallet() {
       const login = async () => {
         await loginUser(address);
         mutateAddress();
+        mutateQuizz();
       };
       login();
       handleClose();
@@ -43,6 +44,8 @@ export default function ConnectWallet() {
     disconnect();
     localStorage.removeItem("accessToken");
     mutateAddress();
+    mutateQuizz();
+    router.push("/");
   };
 
   return (
@@ -59,13 +62,15 @@ export default function ConnectWallet() {
         </Box>
       ) : (
         <Box sx={{ flexGrow: 0 }}>
-          <Button
-            variant="contained"
-            onClick={() => router.push("create-quizz")}
-            style={{ textTransform: "capitalize", marginRight: "15px" }}
-          >
-            Create Quizz
-          </Button>
+          {router.pathname !== "/create-quizz" && (
+            <Button
+              variant="contained"
+              onClick={() => router.push("create-quizz")}
+              style={{ textTransform: "capitalize", marginRight: "15px" }}
+            >
+              Create Quiz
+            </Button>
+          )}
           <Button
             variant="outlined"
             onClick={() => disconnectAccount()}

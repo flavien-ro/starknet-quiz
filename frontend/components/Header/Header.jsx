@@ -13,12 +13,12 @@ import ConnectWallet from "./ConnectWallet";
 
 const pages = ["My Quizzes", "All Quizzes"];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ mutateQuizz }) {
   const router = useRouter();
 
   return (
     <AppBar position="static" style={{ backgroundColor: "white" }}>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Toolbar disableGutters style={{ height: "10vh" }}>
           <Image
             src={StarkLogo}
@@ -47,7 +47,7 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          <ConnectWallet />
+          <ConnectWallet mutateQuizz={mutateQuizz} />
         </Toolbar>
       </Container>
     </AppBar>

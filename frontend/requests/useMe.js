@@ -14,7 +14,7 @@ export const loginUser = async (address) => {
 };
 
 export const getAddress = () => {
-  const url = "http://localhost:5001/auth/getAddress";
+  const url = process.env.API_NODE_URL + "auth/getAddress";
 
   const { data, mutate, error, isLoading } = useSwr(url, fetcher);
 

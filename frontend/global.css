@@ -1,6 +1,5 @@
-/*
-  1. Use a more-intuitive box-sizing model.
-*/
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+
 *,
 *::before,
 *::after {
@@ -9,6 +8,7 @@
 
 * {
   margin: 0;
+  font-family: "Poppins" !important;
 }
 
 html,

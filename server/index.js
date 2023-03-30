@@ -6,6 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import authRoutes from "./routes/auth.js";
+import quizzRoutes from "./routes/quizz.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cors());
 const PORT = process.env.PORT || 5001;
 
 app.use("/auth", authRoutes);
+app.use("/quizz", quizzRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL, {
