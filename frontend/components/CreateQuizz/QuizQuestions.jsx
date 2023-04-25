@@ -9,10 +9,20 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import MenuItem from "@mui/material/MenuItem";
+
+import styles from "./createQuizz.module.css";
+
+const questionTemplate = {
+  question: "",
+  answers: ["", ""],
+  correctAnswerId: 0,
+};
 
 const QuizQuestions = ({ questions, setQuestions }) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
+  const [correctAnswer, setCorrectAnswer] = useState("");
 
   const handleClose = () => setOpen(false);
 
@@ -38,9 +48,14 @@ const QuizQuestions = ({ questions, setQuestions }) => {
   const addAnswer = (index) => {
     const newQuestions = questions;
 
-    newQuestions[index].answers.push("");
+    if (newQuestions[index].answers.length < 5) {
+      newQuestions[index].answers.push("");
 
-    setQuestions([...newQuestions]);
+      setQuestions([...newQuestions]);
+    } else {
+      setError("Maximum 5 answers");
+      setOpen(true);
+    }
   };
 
   const removeAnswer = (index) => {
@@ -83,32 +98,16 @@ const QuizQuestions = ({ questions, setQuestions }) => {
     );
   };
 
+  const handleCorrectAnswer = (answerId, questionIndex) => {
+    questions[questionIndex].correctAnswerId = answerId;
+
+    setCorrectAnswer(answerId);
+  };
+
   return (
     <>
-      <Typography
-        variant="h2"
-        style={{
-          fontSize: "30px",
-          marginTop: "25px",
-          marginBottom: "50px",
-          fontWeight: "bold",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            height: "50px",
-            width: "50px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "15px",
-            borderRadius: "50%",
-            backgroundColor: "#ffcccc",
-            marginRight: "15px",
-          }}
-        >
+      <Typography variant="h2" className={styles.quizTitle}>
+        <div className={styles.icon2}>
           <HelpIcon style={{ color: "#cc0000" }} />
         </div>
         Quiz questions
@@ -116,96 +115,100 @@ const QuizQuestions = ({ questions, setQuestions }) => {
 
       {questions.map((question, index) => {
         return (
-          <Grid
-            key={index}
-            container
-            spacing={2}
-            style={{
-              marginBottom: "50px",
-              padding: "20px",
-              border: "1px solid lightgray",
-              borderRadius: "20px",
-            }}
-          >
-            <Grid item xs={12}>
-              <TextField
-                style={{ width: "100%" }}
-                id="standard-basic"
-                label="What would you like to ask?"
-                variant="outlined"
-                value={question.question}
-                required
-                onChange={(e) => handleQuestionChange(e.target.value, index)}
-              />
-            </Grid>
-            {question.answers.map((answer, key) => {
-              return (
-                <Grid key={key} item xs={6}>
-                  <TextField
-                    style={{ width: "100%" }}
-                    id="standard-basic"
-                    label="New Answer"
-                    variant="outlined"
-                    value={answer}
-                    onChange={(e) =>
-                      handleAnswerChange(
-                        e.target.value,
-                        question.answers,
-                        key,
-                        index
-                      )
-                    }
-                    required
-                  />
-                </Grid>
-              );
-            })}
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Button
-                    style={{ width: "100%" }}
-                    onClick={() => addAnswer(index)}
-                    variant="contained"
-                  >
-                    <AddIcon />
-                    Add answer
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    onClick={() => removeAnswer(index)}
-                    style={{ width: "100%" }}
-                    variant="contained"
-                  >
-                    <DeleteIcon />
-                    Remove answer
-                  </Button>
-                </Grid>
+          <Grid key={index} container className={styles.questionContainer}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  style={{ width: "100%" }}
+                  id="standard-basic"
+                  label="What would you like to ask?"
+                  variant="outlined"
+                  value={question.question}
+                  required
+                  onChange={(e) => handleQuestionChange(e.target.value, index)}
+                />
               </Grid>
-              <Button
-                style={{
-                  width: "100%",
-                  backgroundColor: "red",
-                  marginTop: "20px",
-                }}
-                onClick={() => removeQuestion(index)}
-                variant="contained"
-              >
-                <DeleteIcon />
-                Remove question
-              </Button>
+              {question.answers.map((answer, key) => {
+                return (
+                  <Grid key={key} item xs={6}>
+                    <TextField
+                      style={{ width: "100%" }}
+                      id="standard-basic"
+                      label="New Answer"
+                      variant="outlined"
+                      value={answer}
+                      onChange={(e) =>
+                        handleAnswerChange(
+                          e.target.value,
+                          question.answers,
+                          key,
+                          index
+                        )
+                      }
+                      required
+                    />
+                  </Grid>
+                );
+              })}
+              <Grid item xs={12}>
+                <TextField
+                  style={{ width: "100%" }}
+                  id="correct-answer"
+                  select
+                  label="Select the correct Answer"
+                  helperText="Please select the correct answer"
+                  defaultValue={0}
+                  onChange={(e) => handleCorrectAnswer(e.target.value, index)}
+                  required
+                >
+                  {question.answers.map((option, index) => (
+                    <MenuItem key={index} value={index}>
+                      Answer #{index + 1}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Button
+                      style={{ width: "100%" }}
+                      onClick={() => addAnswer(index)}
+                      variant="contained"
+                    >
+                      <AddIcon />
+                      Add answer
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      onClick={() => removeAnswer(index)}
+                      style={{ width: "100%" }}
+                      variant="contained"
+                    >
+                      <DeleteIcon />
+                      Remove answer
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Button
+                  style={{
+                    width: "100%",
+                    backgroundColor: "red",
+                    marginTop: "20px",
+                  }}
+                  onClick={() => removeQuestion(index)}
+                  variant="contained"
+                >
+                  <DeleteIcon />
+                  Remove question
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         );
       })}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
+      <div className={styles.publishContainer}>
         <Button
           variant="outlined"
           onClick={() => addQuestion()}

@@ -8,15 +8,17 @@ import BraavosIcon from "@/public/braavos-icon.svg";
 import ArgentIcon from "@/public/argent-icon.svg";
 import { truncateEthAddress } from "@/utils/utils";
 import LogoutIcon from "@mui/icons-material/Logout";
+import styles from "./header.module.css";
 
 import { useAccount, useConnectors } from "@starknet-react/core";
 import { getAddress, loginUser } from "@/requests/useMe";
 import { useRouter } from "next/router";
 
-export default function ConnectWallet({ mutateQuizz }) {
+export default function ConnectWallet({ mutateQuizz, mutateMyQuizz }) {
   const router = useRouter();
 
   const { address } = useAccount();
+  const [isConnect, setIsConnect] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -25,11 +27,15 @@ export default function ConnectWallet({ mutateQuizz }) {
   const { userAddress, mutateAddress } = getAddress();
 
   useEffect(() => {
-    if (address) {
+    if (address && isConnect) {
       const login = async () => {
         await loginUser(address);
         mutateAddress();
-        mutateQuizz();
+        if (router.pathname === "/my-quizzes") {
+          mutateMyQuizz();
+        } else {
+          mutateQuizz();
+        }
       };
       login();
       handleClose();
@@ -38,13 +44,18 @@ export default function ConnectWallet({ mutateQuizz }) {
 
   const connectAccount = (connector) => {
     connect(connector);
+    setIsConnect(true);
   };
 
   const disconnectAccount = () => {
     disconnect();
     localStorage.removeItem("accessToken");
     mutateAddress();
-    mutateQuizz();
+    if (router.pathname === "/my-quizzes") {
+      mutateMyQuizz();
+    } else if (mutateQuizz) {
+      mutateQuizz();
+    }
     router.push("/");
   };
 
@@ -62,6 +73,15 @@ export default function ConnectWallet({ mutateQuizz }) {
         </Box>
       ) : (
         <Box sx={{ flexGrow: 0 }}>
+          {router.pathname !== "/my-quizzes" && (
+            <Button
+              variant="contained"
+              onClick={() => router.push("my-quizzes")}
+              style={{ textTransform: "capitalize", marginRight: "15px" }}
+            >
+              My Quizzes
+            </Button>
+          )}
           {router.pathname !== "/create-quizz" && (
             <Button
               variant="contained"
@@ -87,29 +107,8 @@ export default function ConnectWallet({ mutateQuizz }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "500px",
-            height: "250px",
-            backgroundColor: "white",
-            boxShadow: 24,
-            borderRadius: "25px",
-          }}
-        >
-          <div
-            style={{
-              width: "500px",
-              height: "250px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          >
+        <Box className={styles.modalBox}>
+          <div className={styles.modalBody}>
             {connectors.map((connector) => {
               return (
                 <Button

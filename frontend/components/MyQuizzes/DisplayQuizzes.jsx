@@ -2,20 +2,19 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import styles from "./MyQuizz.module.css";
 
-import { useRouter } from "next/router";
+import { deleteQuiz } from "@/requests/useQuizz";
 
-import styles from "./allQuizz.module.css";
-
-const DisplayQuizzes = ({ allQuizz }) => {
-  const router = useRouter();
+const DisplayQuizzes = ({ allQuizz, mutateQuizz }) => {
+  const quizDelete = async (id) => {
+    await deleteQuiz(id);
+    mutateQuizz();
+  };
 
   return (
-    <Container
-      maxWidth="lg"
-      style={{ marginTop: "25px", paddingBottom: "50px" }}
-    >
+    <Container maxWidth="lg" style={{ marginTop: "25px" }}>
       {allQuizz.map((quiz, index) => {
         return (
           <div className={styles.quizContainer} key={index}>
@@ -37,11 +36,14 @@ const DisplayQuizzes = ({ allQuizz }) => {
             >
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#28a428", fontWeight: "bold" }}
-                onClick={() => router.push("/quiz/" + quiz._id)}
+                style={{
+                  backgroundColor: "red",
+                  fontWeight: "bold",
+                }}
+                onClick={() => quizDelete(quiz._id)}
               >
-                <RocketLaunchIcon style={{ marginRight: "5px" }} />
-                Launch Quiz
+                <DeleteIcon style={{ marginRight: "5px" }} />
+                Delete
               </Button>
             </div>
           </div>

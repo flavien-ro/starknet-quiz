@@ -5,6 +5,7 @@ import { getAllQuizz } from "@/requests/useQuizz";
 
 export default function Home() {
   const { data, error, mutateQuizz, isLoading } = getAllQuizz();
+  const { mutateMyQuizz } = getAllQuizz();
 
   return (
     <>
@@ -14,7 +15,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/starknetLogo.svg" />
       </Head>
-      <Header mutateQuizz={mutateQuizz} />
+      <Header mutateQuizz={mutateQuizz} mutateMyQuizz={mutateMyQuizz} />
       <Allquizz
         data={data}
         isLoading={isLoading}

@@ -31,3 +31,44 @@ export const getAllQuizz = () => {
     isLoading: isLoading,
   };
 };
+
+export const getMyQuizzes = () => {
+  const url = process.env.API_NODE_URL + "quizz/get-my-quizz";
+
+  const { data, mutate, error, isLoading } = useSwr(url, fetcher);
+
+  return {
+    data: data?.quizz,
+    mutateMyQuizz: mutate,
+    isLoading: isLoading,
+  };
+};
+
+export const deleteQuiz = async (id) => {
+  try {
+    const response = await axios.delete(
+      process.env.API_NODE_URL + "quizz/delete-quizz/" + id,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return { error };
+  }
+};
+
+export const getQuiz = (id) => {
+  const url = process.env.API_NODE_URL + "quizz/" + id;
+
+  const { data, mutate, error, isLoading } = useSwr(url, fetcher);
+
+  return {
+    data: data?.quizz,
+    mutate: mutate,
+    isLoading: isLoading,
+    error: error,
+  };
+};

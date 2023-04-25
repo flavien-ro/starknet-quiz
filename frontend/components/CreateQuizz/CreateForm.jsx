@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 const questionTemplate = {
   question: "",
   answers: ["", ""],
+  correctAnswerId: 0,
 };
 
 const CreateForm = () => {
@@ -18,7 +19,9 @@ const CreateForm = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [questions, setQuestions] = useState([questionTemplate]);
 

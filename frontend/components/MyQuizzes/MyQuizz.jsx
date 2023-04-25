@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import DisplayQuizzes from "./DisplayQuizzes";
 
 import Loader from "@/utils/Loader";
@@ -11,18 +11,16 @@ import ArgentIcon from "@/public/argent-icon.svg";
 import Container from "@mui/system/Container";
 import Image from "next/image";
 
-import styles from "./allQuizz.module.css";
+import styles from "./MyQuizz.module.css";
 
-const Allquizz = ({ data, isLoading, mutateQuizz }) => {
+const Myquizz = ({ data, isLoading, mutateQuizz }) => {
   const { address } = useAccount();
 
   const { connectors, connect } = useConnectors();
-  const [isConnect, setIsConnect] = useState(false);
-
   const { mutateAddress } = getAddress();
 
   useEffect(() => {
-    if (address && isConnect) {
+    if (address) {
       const login = async () => {
         await loginUser(address);
         mutateAddress();
@@ -34,7 +32,6 @@ const Allquizz = ({ data, isLoading, mutateQuizz }) => {
 
   const connectAccount = (connector) => {
     connect(connector);
-    setIsConnect(true);
   };
 
   return (
@@ -44,7 +41,7 @@ const Allquizz = ({ data, isLoading, mutateQuizz }) => {
       ) : (
         <div>
           {data ? (
-            <DisplayQuizzes allQuizz={data} />
+            <DisplayQuizzes allQuizz={data} mutateQuizz={mutateQuizz} />
           ) : (
             <Container maxWidth="lg" className={styles.quizzesContainer}>
               <Typography variant="h1" className={styles.connectTitle}>
@@ -79,4 +76,4 @@ const Allquizz = ({ data, isLoading, mutateQuizz }) => {
   );
 };
 
-export default Allquizz;
+export default Myquizz;

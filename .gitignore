@@ -37,6 +37,12 @@ yarn-error.log*
 /server/.env*.local
 /frontend/.env
 /server/.env
+/starknet-contracts/.env
+/starknet-contracts/.gitmodules
+/starknet-contracts/build
+/starknet-contracts/lib
 
+
+NFTExample.json
 # vercel
 /frontend/.vercel

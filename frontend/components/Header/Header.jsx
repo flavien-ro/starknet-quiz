@@ -1,25 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 
 import StarkLogo from "@/public/starkQuizzLogo.png";
 import Image from "next/image";
 
+import styles from "./header.module.css";
 import ConnectWallet from "./ConnectWallet";
 
-const pages = ["My Quizzes", "All Quizzes"];
-
-function ResponsiveAppBar({ mutateQuizz }) {
+function Header({ mutateQuizz, mutateMyQuizz }) {
   const router = useRouter();
 
   return (
     <AppBar position="static" style={{ backgroundColor: "white" }}>
       <Container maxWidth="lg">
-        <Toolbar disableGutters style={{ height: "10vh" }}>
+        <Toolbar disableGutters className={styles.toolbar}>
           <Image
             src={StarkLogo}
             width={200}
@@ -29,28 +26,13 @@ function ResponsiveAppBar({ mutateQuizz }) {
             alt={"starkQuizz-logo"}
             style={{ cursor: "pointer" }}
           />
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                sx={{
-                  my: 2,
-                  marginRight: "20px",
-                  color: "black",
-                  display: "block",
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-          <ConnectWallet mutateQuizz={mutateQuizz} />
+          <ConnectWallet
+            mutateQuizz={mutateQuizz}
+            mutateMyQuizz={mutateMyQuizz}
+          />
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default Header;

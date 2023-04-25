@@ -15,8 +15,12 @@ export const login = async (req, res) => {
 
     let newUser = null;
     let token = null;
+
     const user = await User.findOne({ address: address });
-    if (!user) newUser = createUser(address);
+
+    if (!user) {
+      newUser = await createUser(address);
+    }
 
     if (newUser) {
       token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
@@ -36,6 +40,7 @@ export const login = async (req, res) => {
 export const getAddress = async (req, res) => {
   try {
     const reqUser = req.user;
+
     const user = await User.findOne({ _id: reqUser.id });
 
     res.status(200).json({ user });
