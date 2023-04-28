@@ -4,7 +4,7 @@ import { fetcher } from "./fetcher";
 
 export const loginUser = async (address, account) => {
   try {
-    const response = await axios.post("http://localhost:5001/auth/login", {
+    const response = await axios.post(process.env.API_NODE_URL + "auth/login", {
       address,
       account,
     });

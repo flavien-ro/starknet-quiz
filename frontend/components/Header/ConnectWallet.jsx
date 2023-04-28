@@ -13,16 +13,6 @@ import styles from "./header.module.css";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import { getUser, loginUser } from "@/requests/useMe";
 import { useRouter } from "next/router";
-import { shortString, stark, Contract } from "starknet";
-import serialize from "serialize-javascript";
-
-function splitString(text) {
-  const feltArray = [];
-  for (let i = 0; i < text.length; i += 31) {
-    feltArray.push(shortString.encodeShortString(text.slice(i, i + 31)));
-  }
-  return feltArray;
-}
 
 export default function ConnectWallet({ mutateQuiz, mutateMyQuiz }) {
   const router = useRouter();

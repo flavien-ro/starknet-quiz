@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  createQuiz,
   getAllQuiz,
   getMyQuiz,
   deleteMyQuiz,

@@ -19,7 +19,7 @@ const Allquizz = ({ data, isLoading, mutateQuiz }) => {
   const { connectors, connect } = useConnectors();
   const [isConnect, setIsConnect] = useState(false);
 
-  const { userAddress, mutateUser } = getUser();
+  const { mutateUser } = getUser();
 
   useEffect(() => {
     if (address && isConnect) {
