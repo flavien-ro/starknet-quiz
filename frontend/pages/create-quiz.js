@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "@/components/Header/Header";
-import CreateForm from "@/components/CreateQuizz/CreateForm";
+import CreateForm from "@/components/CreateQuiz/CreateForm";
 
 import { Container } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
-const createQuizz = () => {
+const createQuiz = () => {
   return (
     <>
       <Header />
@@ -46,4 +46,4 @@ const createQuizz = () => {
   );
 };
 
-export default createQuizz;
+export default createQuiz;

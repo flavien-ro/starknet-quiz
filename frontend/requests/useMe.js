@@ -2,10 +2,11 @@ import axios from "axios";
 import useSwr from "swr";
 import { fetcher } from "./fetcher";
 
-export const loginUser = async (address) => {
+export const loginUser = async (address, account) => {
   try {
     const response = await axios.post("http://localhost:5001/auth/login", {
       address,
+      account,
     });
     localStorage.setItem("accessToken", response.data.token);
   } catch (error) {
@@ -13,14 +14,15 @@ export const loginUser = async (address) => {
   }
 };
 
-export const getAddress = () => {
-  const url = process.env.API_NODE_URL + "auth/getAddress";
+export const getUser = () => {
+  const url = process.env.API_NODE_URL + "auth/getUser";
 
   const { data, mutate, error, isLoading } = useSwr(url, fetcher);
 
   return {
     userAddress: data?.user?.address,
-    mutateAddress: mutate,
+    account: data?.user?.account,
+    mutateUser: mutate,
     error: error,
     isLoading: isLoading,
   };

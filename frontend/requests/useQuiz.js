@@ -2,11 +2,11 @@ import axios from "axios";
 import useSwr from "swr";
 import { fetcher } from "./fetcher";
 
-export const createQuizz = async (title, description, questions) => {
+export const createQuiz = async (formData) => {
   try {
     const response = await axios.post(
-      process.env.API_NODE_URL + "quizz/create-quizz",
-      { title: title, description: description, questions: questions },
+      process.env.API_NODE_URL + "quiz/create-quiz",
+      formData,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -19,27 +19,27 @@ export const createQuizz = async (title, description, questions) => {
   }
 };
 
-export const getAllQuizz = () => {
-  const url = process.env.API_NODE_URL + "quizz/get-all-quizz";
+export const getAllQuiz = () => {
+  const url = process.env.API_NODE_URL + "quiz/get-all-quiz";
 
   const { data, mutate, error, isLoading } = useSwr(url, fetcher);
 
   return {
-    data: data?.allQuizz,
-    mutateQuizz: mutate,
+    data: data?.allQuiz,
+    mutateQuiz: mutate,
     error: error,
     isLoading: isLoading,
   };
 };
 
 export const getMyQuizzes = () => {
-  const url = process.env.API_NODE_URL + "quizz/get-my-quizz";
+  const url = process.env.API_NODE_URL + "quiz/get-my-quiz";
 
   const { data, mutate, error, isLoading } = useSwr(url, fetcher);
 
   return {
-    data: data?.quizz,
-    mutateMyQuizz: mutate,
+    data: data?.quiz,
+    mutateMyQuiz: mutate,
     isLoading: isLoading,
   };
 };
@@ -47,7 +47,7 @@ export const getMyQuizzes = () => {
 export const deleteQuiz = async (id) => {
   try {
     const response = await axios.delete(
-      process.env.API_NODE_URL + "quizz/delete-quizz/" + id,
+      process.env.API_NODE_URL + "quiz/delete-quiz/" + id,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -61,12 +61,12 @@ export const deleteQuiz = async (id) => {
 };
 
 export const getQuiz = (id) => {
-  const url = process.env.API_NODE_URL + "quizz/" + id;
+  const url = process.env.API_NODE_URL + "quiz/" + id;
 
   const { data, mutate, error, isLoading } = useSwr(url, fetcher);
 
   return {
-    data: data?.quizz,
+    data: data?.quiz,
     mutate: mutate,
     isLoading: isLoading,
     error: error,

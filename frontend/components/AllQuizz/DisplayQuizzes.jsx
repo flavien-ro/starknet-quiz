@@ -16,7 +16,7 @@ const DisplayQuizzes = ({ allQuizz }) => {
       maxWidth="lg"
       style={{ marginTop: "25px", paddingBottom: "50px" }}
     >
-      {allQuizz.map((quiz, index) => {
+      {allQuizz?.map((quiz, index) => {
         return (
           <div className={styles.quizContainer} key={index}>
             <Typography
@@ -38,7 +38,11 @@ const DisplayQuizzes = ({ allQuizz }) => {
               <Button
                 variant="contained"
                 style={{ backgroundColor: "#28a428", fontWeight: "bold" }}
-                onClick={() => router.push("/quiz/" + quiz._id)}
+                onClick={() => {
+                  router
+                    .replace("/quiz/" + quiz._id)
+                    .then(() => router.reload());
+                }}
               >
                 <RocketLaunchIcon style={{ marginRight: "5px" }} />
                 Launch Quiz

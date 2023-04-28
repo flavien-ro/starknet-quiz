@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import QuizQuestions from "./QuizQuestions";
 import QuizInformations from "./QuizInformations";
-import { createQuizz } from "@/requests/useQuizz";
+import { createQuiz } from "@/requests/useQuiz";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useRouter } from "next/router";
@@ -18,6 +18,10 @@ const CreateForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const [selectedImage, setSelectedImage] = useState({
+    image: null,
+    previewUrl: null,
+  });
 
   const handleClose = () => {
     setOpen(false);
@@ -27,7 +31,19 @@ const CreateForm = () => {
 
   const saveQuiz = async (event) => {
     event.preventDefault();
-    const result = await createQuizz(title, description, questions);
+    if (!selectedImage) {
+      setError("Upload an image for your quiz");
+      setOpen(true);
+      return;
+    }
+    const formData = new FormData();
+
+    formData.append("image", selectedImage.image);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("questions", JSON.stringify(questions));
+
+    const result = await createQuiz(formData);
 
     if (result?.error?.response?.data?.error) {
       if (result?.error?.response?.data?.error === "jwt malformed") {
@@ -51,6 +67,8 @@ const CreateForm = () => {
         setTitle={setTitle}
         description={description}
         setDescription={setDescription}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
       />
       <QuizQuestions questions={questions} setQuestions={setQuestions} />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

@@ -38,7 +38,6 @@ yarn-error.log*
 /frontend/.env
 /server/.env
 /starknet-contracts/.env
-/starknet-contracts/.gitmodules
 /starknet-contracts/build
 /starknet-contracts/lib
 

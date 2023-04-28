@@ -1,16 +1,16 @@
 import React from "react";
 import Header from "@/components/Header/Header";
-import Myquizz from "@/components/MyQuizzes/MyQuizz";
+import Myquiz from "@/components/MyQuizzes/MyQuiz";
 
-import { getMyQuizzes } from "@/requests/useQuizz";
+import { getMyQuizzes } from "@/requests/useQuiz";
 
 const MyQuizzes = () => {
-  const { data, mutateMyQuizz, isLoading } = getMyQuizzes();
+  const { data, mutateMyQuiz, isLoading } = getMyQuizzes();
 
   return (
     <div>
-      <Header mutateMyQuizz={mutateMyQuizz} />
-      <Myquizz data={data} isLoading={isLoading} mutateQuizz={mutateMyQuizz} />
+      <Header mutateMyQuiz={mutateMyQuiz} />
+      <Myquiz data={data} isLoading={isLoading} mutateQuiz={mutateMyQuiz} />
     </div>
   );
 };

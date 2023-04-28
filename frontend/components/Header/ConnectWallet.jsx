@@ -11,30 +11,40 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./header.module.css";
 
 import { useAccount, useConnectors } from "@starknet-react/core";
-import { getAddress, loginUser } from "@/requests/useMe";
+import { getUser, loginUser } from "@/requests/useMe";
 import { useRouter } from "next/router";
+import { shortString, stark, Contract } from "starknet";
+import serialize from "serialize-javascript";
 
-export default function ConnectWallet({ mutateQuizz, mutateMyQuizz }) {
+function splitString(text) {
+  const feltArray = [];
+  for (let i = 0; i < text.length; i += 31) {
+    feltArray.push(shortString.encodeShortString(text.slice(i, i + 31)));
+  }
+  return feltArray;
+}
+
+export default function ConnectWallet({ mutateQuiz, mutateMyQuiz }) {
   const router = useRouter();
 
-  const { address } = useAccount();
+  const { address, account } = useAccount();
   const [isConnect, setIsConnect] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const { connectors, connect, disconnect } = useConnectors();
-  const { userAddress, mutateAddress } = getAddress();
+  const { userAddress, mutateUser } = getUser();
 
   useEffect(() => {
     if (address && isConnect) {
       const login = async () => {
-        await loginUser(address);
-        mutateAddress();
+        await loginUser(address, account);
+        mutateUser();
         if (router.pathname === "/my-quizzes") {
-          mutateMyQuizz();
+          mutateMyQuiz();
         } else {
-          mutateQuizz();
+          mutateQuiz();
         }
       };
       login();
@@ -50,11 +60,11 @@ export default function ConnectWallet({ mutateQuizz, mutateMyQuizz }) {
   const disconnectAccount = () => {
     disconnect();
     localStorage.removeItem("accessToken");
-    mutateAddress();
+    mutateUser();
     if (router.pathname === "/my-quizzes") {
-      mutateMyQuizz();
-    } else if (mutateQuizz) {
-      mutateQuizz();
+      mutateMyQuiz();
+    } else if (mutateQuiz) {
+      mutateQuiz();
     }
     router.push("/");
   };
@@ -85,7 +95,7 @@ export default function ConnectWallet({ mutateQuizz, mutateMyQuizz }) {
           {router.pathname !== "/create-quizz" && (
             <Button
               variant="contained"
-              onClick={() => router.push("create-quizz")}
+              onClick={() => router.push("create-quiz")}
               style={{ textTransform: "capitalize", marginRight: "15px" }}
             >
               Create Quiz

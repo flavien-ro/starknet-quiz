@@ -3,7 +3,7 @@ import DisplayQuizzes from "./DisplayQuizzes";
 
 import Loader from "@/utils/Loader";
 import { useAccount, useConnectors } from "@starknet-react/core";
-import { getAddress, loginUser } from "@/requests/useMe";
+import { getUser, loginUser } from "@/requests/useMe";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import BraavosIcon from "@/public/braavos-icon.svg";
@@ -13,20 +13,20 @@ import Image from "next/image";
 
 import styles from "./allQuizz.module.css";
 
-const Allquizz = ({ data, isLoading, mutateQuizz }) => {
-  const { address } = useAccount();
+const Allquizz = ({ data, isLoading, mutateQuiz }) => {
+  const { address, account } = useAccount();
 
   const { connectors, connect } = useConnectors();
   const [isConnect, setIsConnect] = useState(false);
 
-  const { mutateAddress } = getAddress();
+  const { userAddress, mutateUser } = getUser();
 
   useEffect(() => {
     if (address && isConnect) {
       const login = async () => {
-        await loginUser(address);
-        mutateAddress();
-        mutateQuizz();
+        await loginUser(address, account);
+        mutateUser();
+        mutateQuiz();
       };
       login();
     }
@@ -43,8 +43,19 @@ const Allquizz = ({ data, isLoading, mutateQuizz }) => {
         <Loader />
       ) : (
         <div>
-          {data ? (
+          {data?.length > 0 ? (
             <DisplayQuizzes allQuizz={data} />
+          ) : data?.length < 1 ? (
+            <Typography
+              variant="h1"
+              style={{
+                marginTop: "50px",
+                fontSize: "35px",
+                textAlign: "center",
+              }}
+            >
+              There aren't any quizzes yet.
+            </Typography>
           ) : (
             <Container maxWidth="lg" className={styles.quizzesContainer}>
               <Typography variant="h1" className={styles.connectTitle}>

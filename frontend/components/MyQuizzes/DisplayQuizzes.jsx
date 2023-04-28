@@ -5,12 +5,12 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./MyQuizz.module.css";
 
-import { deleteQuiz } from "@/requests/useQuizz";
+import { deleteQuiz } from "@/requests/useQuiz";
 
-const DisplayQuizzes = ({ allQuizz, mutateQuizz }) => {
+const DisplayQuizzes = ({ allQuizz, mutateQuiz }) => {
   const quizDelete = async (id) => {
     await deleteQuiz(id);
-    mutateQuizz();
+    mutateQuiz();
   };
 
   return (

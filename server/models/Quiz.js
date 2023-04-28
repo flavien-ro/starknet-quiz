@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const QuizzSchema = new mongoose.Schema(
+const QuizSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
@@ -17,10 +17,14 @@ const QuizzSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    ipfsJson: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
 
-const Quizz = mongoose.model("Quizz", QuizzSchema);
+const Quiz = mongoose.model("Quiz", QuizSchema);
 
-export default Quizz;
+export default Quiz;

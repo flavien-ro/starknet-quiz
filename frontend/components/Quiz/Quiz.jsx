@@ -8,16 +8,28 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import Button from "@mui/material/Button";
+import { shortString, stark } from "starknet";
 
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 import Loader from "@/utils/Loader";
-import { getQuiz } from "@/requests/useQuizz";
+import { getQuiz } from "@/requests/useQuiz";
 
 import styles from "./quiz.module.css";
+import { useAccount } from "@starknet-react/core";
+import { useRouter } from "next/router";
+
+function splitString(text) {
+  const feltArray = [];
+  for (let i = 0; i < text.length; i += 31) {
+    feltArray.push(shortString.encodeShortString(text.slice(i, i + 31)));
+  }
+  return feltArray;
+}
 
 const Quiz = ({ id }) => {
+  const router = useRouter();
   const { data, isLoading } = getQuiz(id);
   const [checked, setChecked] = useState(-1);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -28,6 +40,14 @@ const Quiz = ({ id }) => {
   const [finish, setFinish] = useState(false);
   const [score, setScore] = useState(0);
   const [victory, setVictory] = useState(false);
+  const [minted, setMinted] = useState(false);
+  const { account } = useAccount();
+
+  useEffect(() => {
+    if (minted) {
+      router.push("/");
+    }
+  }, [minted]);
 
   const nextQuestion = (correctAnswerId) => {
     if (checked === -1) {
@@ -51,6 +71,25 @@ const Quiz = ({ id }) => {
     }
     setQuestionIndex(questionIndex + 1);
     setChecked(-1);
+  };
+
+  const mintQuiz = async () => {
+    try {
+      const callTx = await account.execute({
+        contractAddress: process.env.CONTRACT_ADDRESS,
+        entrypoint: "mint",
+        calldata: stark.compileCalldata({
+          base_token_uri: splitString(data?.ipfsJson),
+        }),
+      });
+      const status = await account.waitForTransaction(callTx.transaction_hash);
+      console.log(status);
+      if (status.status === "PENDING") {
+        setMinted(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -85,7 +124,7 @@ const Quiz = ({ id }) => {
                   >
                     <Button
                       variant="contained"
-                      onClick={() => nextQuestion(question.correctAnswerId)}
+                      onClick={() => mintQuiz()}
                       style={{ marginTop: "15px" }}
                     >
                       Mint the quiz NFT

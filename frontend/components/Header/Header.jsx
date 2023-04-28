@@ -4,13 +4,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { useRouter } from "next/router";
 
-import StarkLogo from "@/public/starkQuizzLogo.png";
+import StarkLogo from "@/public/starkQuizLogo.png";
 import Image from "next/image";
 
 import styles from "./header.module.css";
 import ConnectWallet from "./ConnectWallet";
 
-function Header({ mutateQuizz, mutateMyQuizz }) {
+function Header({ mutateQuiz, mutateMyQuiz }) {
   const router = useRouter();
 
   return (
@@ -26,10 +26,7 @@ function Header({ mutateQuizz, mutateMyQuizz }) {
             alt={"starkQuizz-logo"}
             style={{ cursor: "pointer" }}
           />
-          <ConnectWallet
-            mutateQuizz={mutateQuizz}
-            mutateMyQuizz={mutateMyQuizz}
-          />
+          <ConnectWallet mutateQuiz={mutateQuiz} mutateMyQuiz={mutateMyQuiz} />
         </Toolbar>
       </Container>
     </AppBar>

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// verify if user is loggedIn
 export const verifyToken = async (req, res, next) => {
   try {
     let token = req.header("Authorization");

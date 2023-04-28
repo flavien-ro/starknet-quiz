@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DisplayQuizzes from "./DisplayQuizzes";
 
 import Loader from "@/utils/Loader";
 import { useAccount, useConnectors } from "@starknet-react/core";
-import { getAddress, loginUser } from "@/requests/useMe";
+import { getUser, loginUser } from "@/requests/useMe";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import BraavosIcon from "@/public/braavos-icon.svg";
@@ -13,18 +13,19 @@ import Image from "next/image";
 
 import styles from "./MyQuizz.module.css";
 
-const Myquizz = ({ data, isLoading, mutateQuizz }) => {
-  const { address } = useAccount();
+const Myquiz = ({ data, isLoading, mutateQuiz }) => {
+  const { address, account } = useAccount();
 
   const { connectors, connect } = useConnectors();
-  const { mutateAddress } = getAddress();
+  const { mutateUser } = getUser();
+  const [isConnect, setIsConnect] = useState(false);
 
   useEffect(() => {
-    if (address) {
+    if (address && isConnect) {
       const login = async () => {
-        await loginUser(address);
-        mutateAddress();
-        mutateQuizz();
+        await loginUser(address, account);
+        mutateUser();
+        mutateQuiz();
       };
       login();
     }
@@ -32,6 +33,7 @@ const Myquizz = ({ data, isLoading, mutateQuizz }) => {
 
   const connectAccount = (connector) => {
     connect(connector);
+    setIsConnect(true);
   };
 
   return (
@@ -40,8 +42,19 @@ const Myquizz = ({ data, isLoading, mutateQuizz }) => {
         <Loader />
       ) : (
         <div>
-          {data ? (
-            <DisplayQuizzes allQuizz={data} mutateQuizz={mutateQuizz} />
+          {data && data?.length >= 1 ? (
+            <DisplayQuizzes allQuizz={data} mutateQuiz={mutateQuiz} />
+          ) : data?.length < 1 ? (
+            <Typography
+              variant="h1"
+              style={{
+                marginTop: "50px",
+                fontSize: "35px",
+                textAlign: "center",
+              }}
+            >
+              You haven't created a quiz yet.
+            </Typography>
           ) : (
             <Container maxWidth="lg" className={styles.quizzesContainer}>
               <Typography variant="h1" className={styles.connectTitle}>
@@ -76,4 +89,4 @@ const Myquizz = ({ data, isLoading, mutateQuizz }) => {
   );
 };
 
-export default Myquizz;
+export default Myquiz;
